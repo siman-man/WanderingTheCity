@@ -5,10 +5,10 @@ Problem Statement
 The City covers the surface of a torus-shaped planet. It has only two types of buildings: black and white. All buildings of the same color are identical.
 この町はトーラス形の宇宙で覆われています。そして黒と白の2つの種類の建物しかありません。全ての同じ色をした建物は同一です。
 The buildings are arranged in a square grid of SxS square blocks, each block contains exactly one building, and there are streets between each pair of horizontally or vertically adjacent blocks.
-建物はこのS x Sで囲われたグリッド空間上に配置されています。各ブロックにはかならず1つの建物が含まれています。また
+建物はこのS x Sで囲われたグリッド空間上に配置されています。各ブロックにはかならず1つの建物が含まれています。また、隣接したブロックの間には街路が存在しています
 
 You find yourself at one of the crossroads of the city. You don't know which crossroads it is. Fortunately, you have a map of the City, and you can walk around looking at the buildings.
-あなたは自分だけの道の配置を見つけて下さい。交差点がどんなものかは知りません。幸運なことにあなたは町の地図を持っています。そしてあなたは辺りを歩いて建物を見ることが出来ます。
+あなたある一つの交差点を探し出して下さい。交差点がどんなものかは知りません。幸運なことにあなたは町の地図を持っています。そしてあなたは辺りを歩いて建物を見ることが出来ます。
 Unfortunately, the map you have is outdated; some of the buildings in the city have been painted a different color since it was printed, so the City you see differs from the map.
 しかし残念なことに、地図は外部に保存されているのです。町の幾つかの建物は異なる色になっています。なのであなたの見た情報とマップの情報は異なります。
 
@@ -27,3 +27,34 @@ guess(vector <int> coord) allows you to make a guess about the coordinates of th
 A crossroads with coordinates (R, C) is located in the top left corner of the building in row R and column C. Thus, crossroads with coordinates (0, 0) is the top left corner of the map.
 
 Your solution is allowed to make at most S^2 calls to each of look() and guess() functions, and to walk a Manhattan distance of at most 16*S^2 blocks in walk() functions.
+
+
+## 考察
+
+ある一つの交差点を求める問題、交差点を求めるには外部に保存されている地図と、アクションによる行動によって推測する
+いわゆるリアクティブ型の問題
+
+## 各アクションについて
+
+ * 現時点の最新の情報を取得する
+ * 歩く
+ * スタート地点を予測する
+
+## ビジュアライザコードリーディング
+
+ * 街のちずには古いものと新しいものがある。
+ * 最初に渡される地図は古い地図
+ * 一部新しい地図と建物が異なる
+ * y軸とx軸はループしている
+ * 1%の確率で古い情報と異なる(ランダム)
+ * 5-20%の確率で建物が反転している
+
+## スタート地点を予測するのに必要な情報
+
+  * 街はループしている
+  * 街の縦幅と横幅がわかる
+
+
+## 解法
+
+ * とりあえず全部の地点を予想してみる（必ず当たる）
