@@ -2,7 +2,7 @@ require 'open3'
 
 PROBLEM_NAME = 'WanderingTheCity'
 ROUND_ID = 16828
-SEED = 4
+SEED = 1
 
 desc 'c++ file compile'
 task :default do
@@ -17,31 +17,31 @@ end
 desc 'exec and view result'
 task :run do
   Rake::Task['compile'].invoke
-  system("java -jar ./visualizer.jar -vis -seed #{SEED} -exec './#{PROBLEM_NAME}'")
+  system("java -jar ./tester.jar -vis -size 10 -seed #{SEED} -exec './#{PROBLEM_NAME}'")
 end
 
 desc 'check single'
 task :one do
   Rake::Task['compile'].invoke
-  system("time java -jar visualizer.jar -seed #{SEED} -novis -exec './#{PROBLEM_NAME}'")
+  system("time java -jar tester.jar -seed #{SEED} -novis -exec './#{PROBLEM_NAME}'")
 end
 
 desc 'check for windows'
 task :windows do
   Rake::Task['compile'].invoke
-  system("java -jar ./visualizer.jar -novis -seed #{SEED} -exec ./#{PROBLEM_NAME}.exe")
+  system("java -jar ./tester.jar -novis -seed #{SEED} -exec ./#{PROBLEM_NAME}.exe")
 end
 
 desc 'check out of memory'
 task :debug do
   system("g++ -std=c++11 -W -Wall -g -fsanitize=address -fno-omit-frame-pointer -Wno-sign-compare -O2 -o #{PROBLEM_NAME} #{PROBLEM_NAME}.cpp")
-  system("time java -jar visualizer.jar -seed #{SEED} -novis -exec './#{PROBLEM_NAME}'")
+  system("time java -jar tester.jar -seed #{SEED} -novis -exec './#{PROBLEM_NAME}'")
 end
 
 desc 'check how many called each function'
 task :coverage do
   system("g++ -W -Wall -Wno-sign-compare -o #{PROBLEM_NAME} --coverage #{PROBLEM_NAME}.cpp")
-  system("time java -jar visualizer.jar -seed #{SEED} -novis -exec './#{PROBLEM_NAME}'")
+  system("time java -jar tester.jar -seed #{SEED} -novis -exec './#{PROBLEM_NAME}'")
 end
 
 desc 'clean file'
