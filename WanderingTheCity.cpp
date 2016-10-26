@@ -8,12 +8,7 @@ using namespace std;
 
 int S;
 
-const int FAIL = 0;
 const int HIT = 1;
-
-const char BLACK = 'X';
-const char WHITE = '.';
-const char UNKNOWN = '-';
 
 class Actions {
   public:
@@ -51,24 +46,25 @@ vector<string> g_oldCityMap;
 vector<string> g_cityMap;
 vector<string> g_myMap;
 
-int g_walkCost;
-int g_lookCost;
-int g_guessCost;
-
 class WanderingTheCity {
   public:
     Actions ac;
     int posY;
     int posX;
+    int currentCost;
+    int walkCost;
+    int lookCost;
+    int guessCost;
 
     void init(vector<string> cityMap, int W, int L, int G) {
       S = cityMap.size();
       g_oldCityMap = cityMap;
       g_cityMap = cityMap;
       g_myMap = cityMap;
-      g_walkCost = W;
-      g_lookCost = L;
-      g_guessCost = G;
+      walkCost = W;
+      lookCost = L;
+      guessCost = G;
+      currentCost = 0;
 
       for (int y = 0; y < S; y++) {
         for (int x = 0; x < S; x++) {
@@ -87,8 +83,6 @@ class WanderingTheCity {
 
       fprintf(stderr,"S = %d\n", S);
 
-      look();
-
       showOldCityMap();
       showMyMap();
 
@@ -100,6 +94,18 @@ class WanderingTheCity {
           if (result == HIT) return 0;
         }
       }
+    }
+
+    /**
+     * walk map
+     */
+    void walk(int shiftY, int shiftX) {
+      int ny = (posY+shiftY+S)%S;
+      int nx = (posX+shiftX+S)%S;
+
+      fprintf(stderr,"move... (%d, %d) => (%d, %d)\n", posY, posX, ny, nx);
+      posY = ny;
+      posX = nx;
     }
 
     /**
@@ -130,12 +136,12 @@ class WanderingTheCity {
       return ac.guess(coord);
     }
 
-    void showAround() {
+    void showAround(int size = 2) {
       fprintf(stderr,"-----------------------\n");
       fprintf(stderr,"      Look Around      \n");
       fprintf(stderr,"-----------------------\n");
-      for (int y = -1; y <= 1; y++) {
-        for (int x = -1; x <= 1; x++) {
+      for (int y = -size; y <= size; y++) {
+        for (int x = -size; x <= size; x++) {
           fprintf(stderr,"%c", g_myMap[(posY+y+S)%S][(posX+x+S)%S]);
         }
         fprintf(stderr,"\n");
