@@ -1,3 +1,5 @@
 WanderingTheCity
 *.jar
 *.exe
+.gitignore
+data

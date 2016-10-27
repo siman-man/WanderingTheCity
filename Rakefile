@@ -2,7 +2,7 @@ require 'open3'
 
 PROBLEM_NAME = 'WanderingTheCity'
 ROUND_ID = 16828
-SEED = 1
+SEED = 4
 
 desc 'c++ file compile'
 task :default do
@@ -63,7 +63,7 @@ task :sample do
       file.puts("----- !BEGIN! ------")
       file.puts("Seed = #{seed}")
 
-      data = Open3.capture3("time java -jar visualizer.jar -seed #{seed} -novis -exec './#{PROBLEM_NAME}'")
+      data = Open3.capture3("time java -jar tester.jar -seed #{seed} -novis -exec './#{PROBLEM_NAME}'")
       file.puts(data.select{|d| d.is_a?(String) }.flat_map{|d| d.split("\n") })
       file.puts("----- !END! ------")
     end
@@ -83,7 +83,7 @@ task :test do
       file.puts("----- !BEGIN! ------")
       file.puts("Seed = #{seed}")
 
-      data = Open3.capture3("time java -jar visualizer.jar -seed #{seed} -novis -exec './#{PROBLEM_NAME}'")
+      data = Open3.capture3("time java -jar tester.jar -seed #{seed} -novis -exec './#{PROBLEM_NAME}'")
       file.puts(data.select{|d| d.is_a?(String) }.flat_map{|d| d.split("\n") })
       file.puts("----- !END! ------")
     end
@@ -102,7 +102,7 @@ task :final do
       file.puts("----- !BEGIN! ------")
       file.puts("Seed = #{seed}")
 
-      data = Open3.capture3("time java -jar visualizer.jar -seed #{seed} -novis -exec './#{PROBLEM_NAME}'")
+      data = Open3.capture3("time java -jar tester.jar -seed #{seed} -novis -exec './#{PROBLEM_NAME}'")
       file.puts(data.select{|d| d.is_a?(String) }.flat_map{|d| d.split("\n") })
       file.puts("----- !END! ------")
     end
@@ -124,7 +124,7 @@ task :select do
       file.puts("----- !BEGIN! ------")
       file.puts("Seed = #{seed}")
 
-      data = Open3.capture3("time java -jar visualizer.jar -seed #{seed} -novis -exec './#{PROBLEM_NAME}'")
+      data = Open3.capture3("time java -jar tester.jar -seed #{seed} -novis -exec './#{PROBLEM_NAME}'")
       file.puts(data.select{|d| d.is_a?(String) }.flat_map{|d| d.split("\n") })
       file.puts("----- !END! ------")
     end

@@ -20,12 +20,8 @@ Your code must implement one method whereAmI(vector <string> map, int W, int L, 
 あなたは whereAmI を実装する必要があります
 This method will be called once; it will give you the (outdated) map of the City as a vector <string>, with black and white buildings denoted as 'X' and '.', respectively,
 このメソッドは1度だけ呼び出されます。そしてあなたに街の情報を渡します。白と黒の建物Xとxが繰り返された
-and constants used in scoring (see Scoring section).
-そして今回のスコアの詳細も
-The return value of this method is an integer, and it will be ignored during scoring. From this method you can call the following library functions of class Actions:
-このメソッドでは整数値を返却します、この返却値はスコアに影響はありません。
+and constants used in scoring (see Scoring section). The return value of this method is an integer, and it will be ignored during scoring. From this method you can call the following library functions of class Actions:
 look() allows you to look around you when you're standing at a crossroads.
-lookコマンドはあなたの周りの景色を返します
 You'll see four buildings immediately adjacent to this crossroads, which will be returned to you as a vector <string> with 2 rows and 2 columns. The orientation of this piece is the same as of the big map you're given initially. This method returns you the actual colors of the buildings, which might not match their colors on the map you're given!
 walk(vector <int> shift) allows you to walk to a different crossroads. shift is a vector <int> with exactly two elements, shift[0] and shift[1] are distances you want to walk along vertical and horizontal axis, respectively. Both elements of shift must be between -S+1 and S-1, inclusive (remember that the map wraps around both horizontally and vertically). This method will return -1 if the call was invalid (provided invalid parameters or involved too much walking) and 0 in normal case.
 
@@ -36,6 +32,10 @@ A crossroads with coordinates (R, C) is located in the top left corner of the bu
 
 Your solution is allowed to make at most S^2 calls to each of look() and guess() functions, and to walk a Manhattan distance of at most 16*S^2 blocks in walk() functions.
 
+
+## 実装
+
+- [ ] 与えたフィールドのパターンから一番近いパターンの座標を返す
 
 ## 考察
 
@@ -55,6 +55,12 @@ Your solution is allowed to make at most S^2 calls to each of look() and guess()
   * もし古い地図ではなく新しい地図を最初から保持していた場合にはどうなるか
     * 町はある一定部分を繰り返すことで生成されているが、その繰り返しと異なる部分を見つけ出す
     * 見つけ出したそこまでの経路から逆算で求めることが可能
+
+  * 斜めに情報を開示した場合は一部の情報が判明した段階で全ての正確な座標が出せるのでは
+
+  * マップは必ず割り切れる数でリピートされている
+    * つまり素数の場合はマップのリピートは無し
+    * 割り切れる数が少ないのであればある程度repeat値は予測可能？
 
 ## 各アクションについて
 
@@ -77,15 +83,11 @@ Your solution is allowed to make at most S^2 calls to each of look() and guess()
   * 街の縦幅と横幅がわかる
   * ある特定の座標がわかればそこから相対座標で割り出せる
 
-## 戦略
- * 街の変化率を予測する。
-   * これは推測の時のパラメータとして使う
+## 解法
 
  * とりあえず全部の地点を予想してみる（必ず当たる）
    * と思ったけどTimeoutになって落ちた :) そんなに標準出力したとは思わないけど...
 
- * 一度マップの情報を最新に更新する
-
- * 一部マップを公開し、古いマップと一致率の高いところをピックアップする
-   * どの範囲でフィルターを掛けるかが難しい
-   * フィルターを掛ける部分が一番計算時間を使いそう
+ * 街がループしている間隔を導き出す
+   * Sが割り切れるサイズで街はループしている
+     * つまりSが素数の場合は町はループしていない

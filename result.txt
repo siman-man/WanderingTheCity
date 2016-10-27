@@ -1,0 +1,140 @@
+----- !BEGIN! ------
+Seed = 1
+S = 20
+S = 20
+....
+.X..
+XXX.
+.X.X
+Score = 11362.0
+
+real	0m0.217s
+user	0m0.249s
+sys	0m0.047s
+----- !END! ------
+----- !BEGIN! ------
+Seed = 2
+S = 40
+S = 40
+....
+X.X.
+X...
+....
+Score = 1218658.0
+
+real	0m0.284s
+user	0m0.387s
+sys	0m0.080s
+----- !END! ------
+----- !BEGIN! ------
+Seed = 3
+S = 60
+S = 60
+...X
+.X..
+..X.
+....
+Score = 47644.0
+
+real	0m0.265s
+user	0m0.381s
+sys	0m0.070s
+----- !END! ------
+----- !BEGIN! ------
+Seed = 4
+S = 500
+S = 500
+..X.
+...X
+....
+....
+Score = 3.92724639E9
+
+real	0m3.142s
+user	0m2.537s
+sys	0m1.823s
+----- !END! ------
+----- !BEGIN! ------
+Seed = 5
+S = 120
+S = 120
+....
+X...
+....
+....
+Score = 8.1123008E7
+
+real	0m0.645s
+user	0m0.998s
+sys	0m0.305s
+----- !END! ------
+----- !BEGIN! ------
+Seed = 6
+S = 411
+S = 411
+X...
+.X.X
+....
+..X.
+Score = 2.578153668E9
+
+real	0m2.297s
+user	0m2.039s
+sys	0m1.306s
+----- !END! ------
+----- !BEGIN! ------
+Seed = 7
+S = 218
+S = 218
+.XXX
+.X.X
+.X.X
+.X.X
+Score = 5.1864729E7
+
+real	0m0.793s
+user	0m1.132s
+sys	0m0.367s
+----- !END! ------
+----- !BEGIN! ------
+Seed = 8
+S = 354
+S = 354
+X.X.
+....
+X.X.
+...X
+Score = 1.793128357E9
+
+real	0m2.083s
+user	0m2.040s
+sys	0m1.197s
+----- !END! ------
+----- !BEGIN! ------
+Seed = 9
+S = 357
+S = 357
+..X.
+..X.
+...X
+X...
+Score = 2.123194696E9
+
+real	0m1.950s
+user	0m1.897s
+sys	0m1.100s
+----- !END! ------
+----- !BEGIN! ------
+Seed = 10
+S = 270
+S = 270
+....
+XX..
+....
+....
+Score = 9.57090561E8
+
+real	0m1.396s
+user	0m1.595s
+sys	0m0.768s
+----- !END! ------

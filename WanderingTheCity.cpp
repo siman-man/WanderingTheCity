@@ -9,6 +9,7 @@ using namespace std;
 int S;
 
 const int HIT = 1;
+const int FILTER_SIZE = 4;
 
 class Actions {
   public:
@@ -42,9 +43,16 @@ class Actions {
     }
 };
 
-vector<string> g_oldCityMap;
-vector<string> g_cityMap;
-vector<string> g_myMap;
+
+struct Coord {
+  int y;
+  int x;
+
+  Coord(int y = -1, int x = -1) {
+    this->y = y;
+    this->x = x;
+  }
+};
 
 class WanderingTheCity {
   public:
@@ -55,12 +63,15 @@ class WanderingTheCity {
     int walkCost;
     int lookCost;
     int guessCost;
+    vector<string> oldCityMap;
+    vector<string> cityMap;
+    vector<string> myMap;
 
     void init(vector<string> cityMap, int W, int L, int G) {
       S = cityMap.size();
-      g_oldCityMap = cityMap;
-      g_cityMap = cityMap;
-      g_myMap = cityMap;
+      oldCityMap = cityMap;
+      cityMap = cityMap;
+      myMap = cityMap;
       walkCost = W;
       lookCost = L;
       guessCost = G;
@@ -68,7 +79,7 @@ class WanderingTheCity {
 
       for (int y = 0; y < S; y++) {
         for (int x = 0; x < S; x++) {
-          g_myMap[y][x] = '-';
+          myMap[y][x] = '-';
         }
       }
 
@@ -85,18 +96,68 @@ class WanderingTheCity {
 
       walkAllMap();
 
-      showOldCityMap();
-      showMyMap();
-      showAround();
+      //showOldCityMap();
+      //showMyMap();
+      //showAround();
+
+      vector<string> filter = createFilter(0, 0);
+      showFilter(filter);
+
+      vector<Coord> result = scan(filter);
+      int rsize = result.size();
+      fprintf(stderr,"rsize = %d\n", rsize);
+
+      for (int i = 0; i < rsize; i++) {
+        Coord coord = result[i];
+        int result = guess(coord.y, coord.x);
+        //fprintf(stderr,"(%d, %d)\n", coord.y, coord.x);
+        if (result == HIT) {
+          return 0;
+        }
+      }
+
+      return 0;
+    }
+
+    vector<string> createFilter(int y, int x) {
+      vector<string> filter(4, "----");
+
+      for (int i = 0; i < FILTER_SIZE; i++) {
+        for (int j = 0; j < FILTER_SIZE; j++) {
+          filter[i][j] = myMap[(y+i)%S][(x+j)%S];
+        }
+      }
+
+      return filter;
+    }
+
+    vector<Coord> scan(vector<string> &filter) {
+      vector<Coord> coords;
 
       for (int y = 0; y < S; y++) {
         for (int x = 0; x < S; x++) {
-          int result = guess(y, x);
-          if (result == HIT) return 0;
+          int value = 0;
+
+          for (int i = 0; i < FILTER_SIZE; i++) {
+            for (int j = 0; j < FILTER_SIZE; j++) {
+              if (filter[i][j] == oldCityMap[(y+i)%S][(x+j)%S]) {
+                value++;
+              }
+            }
+          }
+
+          if (value >= 12) {
+            coords.push_back(Coord(y, x));
+          }
         }
       }
+
+      return coords;
     }
 
+    /**
+     * walking this map.
+     */
     void walkAllMap() {
       for (int y = 0; y < S; y += 2) {
         for (int x = 0; x < S; x += 2) {
@@ -121,7 +182,7 @@ class WanderingTheCity {
       shifts[0] = shiftY;
       shifts[1] = shiftX;
 
-      fprintf(stderr,"move... (%d, %d) => (%d, %d)\n", posY, posX, ny, nx);
+      //fprintf(stderr,"move... (%d, %d) => (%d, %d)\n", posY, posX, ny, nx);
       ac.walk(shifts);
       posY = ny;
       posX = nx;
@@ -135,14 +196,16 @@ class WanderingTheCity {
     void look() {
       vector<string> view = ac.look();
 
+      /*
       for (int y = 0; y < 2; y++) {
         fprintf(stderr,"%s\n", view[y].c_str());
       }
+      */
 
-      g_myMap[posY][posX]             = view[0][0];
-      g_myMap[posY][(posX+1)%S]       = view[0][1];
-      g_myMap[(posY+1)%S][posX]       = view[1][0];
-      g_myMap[(posY+1)%S][(posX+1)%S] = view[1][1];
+      myMap[(posY-1+S)%S][(posX-1+S)%S] = view[0][0];
+      myMap[(posY-1+S)%S][posX]         = view[0][1];
+      myMap[posY][(posX-1+S)%S]         = view[1][0];
+      myMap[posY][posX]                 = view[1][1];
     }
 
     /**
@@ -163,7 +226,7 @@ class WanderingTheCity {
       fprintf(stderr,"-----------------------\n");
       for (int y = -size; y <= size; y++) {
         for (int x = -size; x <= size; x++) {
-          fprintf(stderr,"%c", g_myMap[(posY+y+S)%S][(posX+x+S)%S]);
+          fprintf(stderr,"%c", myMap[(posY+y+S)%S][(posX+x+S)%S]);
         }
         fprintf(stderr,"\n");
       }
@@ -174,7 +237,7 @@ class WanderingTheCity {
       fprintf(stderr,"     Old City Map      \n");
       fprintf(stderr,"-----------------------\n");
       for (int y = 0; y < S; y++) {
-        fprintf(stderr,"%s\n", g_oldCityMap[y].c_str());
+        fprintf(stderr,"%s\n", oldCityMap[y].c_str());
       }
     }
 
@@ -183,7 +246,7 @@ class WanderingTheCity {
       fprintf(stderr,"     New City Map      \n");
       fprintf(stderr,"-----------------------\n");
       for (int y = 0; y < S; y++) {
-        fprintf(stderr,"%s\n", g_cityMap[y].c_str());
+        fprintf(stderr,"%s\n", cityMap[y].c_str());
       }
     }
 
@@ -192,7 +255,13 @@ class WanderingTheCity {
       fprintf(stderr,"         My Map        \n");
       fprintf(stderr,"-----------------------\n");
       for (int y = 0; y < S; y++) {
-        fprintf(stderr,"%s\n", g_myMap[y].c_str());
+        fprintf(stderr,"%s\n", myMap[y].c_str());
+      }
+    }
+
+    void showFilter(vector<string> &filter) {
+      for (int i = 0; i < FILTER_SIZE; i++) {
+        fprintf(stderr,"%s\n", filter[i].c_str());
       }
     }
 };
@@ -210,6 +279,6 @@ int main() {
   cin >> L;
   cin >> G;
   WanderingTheCity wtc;
-  int ret = wtc.whereAmI(cityMap, W, L, G);
+  wtc.whereAmI(cityMap, W, L, G);
   cout << "!" << endl;
 }
