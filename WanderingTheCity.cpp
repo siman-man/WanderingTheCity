@@ -118,8 +118,8 @@ class WanderingTheCity {
       int ny = applyShift(posY, shiftY);
       int nx = applyShift(posX, shiftX);
       vector<int> shifts(2);
-      shifts[0] = ny;
-      shifts[1] = nx;
+      shifts[0] = shiftY;
+      shifts[1] = shiftX;
 
       fprintf(stderr,"move... (%d, %d) => (%d, %d)\n", posY, posX, ny, nx);
       ac.walk(shifts);
