@@ -83,9 +83,10 @@ class WanderingTheCity {
 
       fprintf(stderr,"S = %d\n", S);
 
+      walkAllMap();
+
       showOldCityMap();
       showMyMap();
-
       showAround();
 
       for (int y = 0; y < S; y++) {
@@ -96,16 +97,36 @@ class WanderingTheCity {
       }
     }
 
+    void walkAllMap() {
+      for (int y = 0; y < S; y += 2) {
+        for (int x = 0; x < S; x += 2) {
+          look();
+          walk(0, 2);
+        }
+        walk(2, 0);
+      }
+    }
+
+    int applyShift(int cur, int shift) {
+      return (cur + shift + S) % S;
+    }
+
     /**
      * walk map
      */
     void walk(int shiftY, int shiftX) {
-      int ny = (posY+shiftY+S)%S;
-      int nx = (posX+shiftX+S)%S;
+      int ny = applyShift(posY, shiftY);
+      int nx = applyShift(posX, shiftX);
+      vector<int> shifts(2);
+      shifts[0] = ny;
+      shifts[1] = nx;
 
       fprintf(stderr,"move... (%d, %d) => (%d, %d)\n", posY, posX, ny, nx);
+      ac.walk(shifts);
       posY = ny;
       posX = nx;
+      assert(0 <= posY && posY <= S);
+      assert(0 <= posX && posX <= S);
     }
 
     /**
