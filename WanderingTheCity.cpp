@@ -10,39 +10,26 @@ int S;
 
 const int HIT = 1;
 const int FILTER_SIZE = 4;
+const double SAME_RATE = 0.97;
 
 class Actions {
   public:
     vector<string> look() {
       cout << "?look" << endl;
       vector<string> ret(2);
-      cin >> ret[0];
-      cin >> ret[1];
-
-      return ret;
-    }
-
+      cin >> ret[0]; cin >> ret[1];
+      return ret;}
     int walk(vector<int> shift) {
       cout << "?walk" << endl;
       cout << shift[0] << endl;
       cout << shift[1] << endl;
-
-      int result;
-      cin >> result;
-      return result;
-    }
-
+      int result; cin >> result; return result;}
     int guess(vector<int> coord) {
       cout << "?guess" <<endl;
       cout << coord[0] << endl;
       cout << coord[1] << endl;
-
-      int result;
-      cin >> result;
-      return result;
-    }
+      int result; cin >> result; return result;}
 };
-
 
 struct Coord {
   int y;
@@ -97,7 +84,7 @@ class WanderingTheCity {
       walkAllMap();
 
       //showOldCityMap();
-      //showMyMap();
+      showMyMap();
       //showAround();
 
       vector<string> filter = createFilter(0, 0);
@@ -106,6 +93,10 @@ class WanderingTheCity {
       vector<Coord> result = scan(filter);
       int rsize = result.size();
       fprintf(stderr,"rsize = %d\n", rsize);
+      int repeatI = estimateRepeatI();
+      int repeatJ = estimateRepeatJ();
+      fprintf(stderr,"repeatI = %d, repeatJ = %d\n", repeatI, repeatJ);
+      cerr.flush();
 
       for (int i = 0; i < rsize; i++) {
         Coord coord = result[i];
@@ -117,6 +108,72 @@ class WanderingTheCity {
       }
 
       return 0;
+    }
+
+    /**
+     * estimate city repeatI (y axis)
+     *
+     * @return [int] repeatI
+     */
+    int estimateRepeatI() {
+      for (int i = 2; i < S; i++) {
+        if (S % i != 0) continue;
+
+        int totalCnt = 0;
+        int sameCnt = 0;
+
+        for (int x = 0; x < S; x++) {
+          char ch = oldCityMap[0][x];
+
+          for (int y = 0; y < S; y+=i) {
+            totalCnt++;
+
+            if (ch == oldCityMap[y][x]) {
+              sameCnt++;
+            }
+          }
+        }
+
+        double rate = sameCnt / (double) totalCnt;
+        if (rate >= SAME_RATE) {
+          return i;
+        }
+      }
+
+      return S;
+    }
+
+    /**
+     * estimate city repeatJ (x axis)
+     *
+     * @return [int] repeatJ
+     */
+    int estimateRepeatJ() {
+      for (int j = 2; j < S; j++) {
+        if (S % j != 0) continue;
+
+        int totalCnt = 0;
+        int sameCnt = 0;
+
+        for (int y = 0; y < S; y++) {
+          char ch = oldCityMap[y][0];
+
+          for (int x = 0; x < S; x+=j) {
+            totalCnt++;
+
+            if (ch == oldCityMap[y][x]) {
+              sameCnt++;
+            }
+          }
+        }
+
+        double rate = sameCnt / (double) totalCnt;
+        if (rate >= SAME_RATE) {
+          return j;
+        }
+      }
+
+      return S;
     }
 
     vector<string> createFilter(int y, int x) {
